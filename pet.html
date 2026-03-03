@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pet Profile</title>
+</head>
+<body style="text-align:center; font-family:Arial;">
+
+<h2>Pet Profile</h2>
+
+<div id="profile"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script>
+let params = new URLSearchParams(window.location.search);
+let petId = params.get("id");
+
+let petData = JSON.parse(localStorage.getItem(petId));
+
+if (petData) {
+    document.getElementById("profile").innerHTML = `
+        <h3>${petData.petname}</h3>
+        <p>Owner: ${petData.owner}</p>
+        <p>Phone: ${petData.phone}</p>
+        <button onclick="callOwner()">Call Owner</button>
+        <div id="qrcode"></div>
+    `;
+
+    new QRCode(document.getElementById("qrcode"), {
+        text: window.location.href,
+        width: 200,
+        height: 200
+    });
+}
+
+function callOwner() {
+    window.location.href = "tel:" + petData.phone;
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PUPA Pet ID</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .box {
+            background: white;
+            padding: 20px;
+            margin: 50px auto;
+            width: 300px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+        }
+        input {
+            width: 90%;
+            padding: 8px;
+            margin: 5px;
+        }
+        button {
+            padding: 10px;
+            background: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>PUPA Pet Registration</h2>
+    <input type="text" id="owner" placeholder="Owner Name"><br>
+    <input type="text" id="phone" placeholder="Phone Number"><br>
+    <input type="text" id="petname" placeholder="Pet Name"><br>
+    <button onclick="registerPet()">Register Pet</button>
+</div>
+
+<script>
+function registerPet() {
+    let owner = document.getElementById("owner").value;
+    let phone = document.getElementById("phone").value;
+    let petname = document.getElementById("petname").value;
+
+    let petId = "PUPA" + Math.floor(Math.random() * 10000);
+
+    let petData = {
+        owner: owner,
+        phone: phone,
+        petname: petname
+    };
+
+    localStorage.setItem(petId, JSON.stringify(petData));
+
+    alert("Pet Registered! ID: " + petId);
+
+    window.location.href = "pet.html?id=" + petId;
+}
+</script>
+
+</body>
+</html>
