@@ -1,41 +1,58 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Pet Profile</title>
+<title>Lost Pet Info</title>
 </head>
-<body style="text-align:center; font-family:Arial;">
 
-<h2>Pet Profile</h2>
+<body>
 
-<div id="profile"></div>
+<h1>Pet Information</h1>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<p id="petname"></p>
+<p id="owner"></p>
+<p id="phone"></p>
 
-<script>
-let params = new URLSearchParams(window.location.search);
-let petId = params.get("id");
+<script type="module">
 
-let petData = JSON.parse(localStorage.getItem(petId));
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-if (petData) {
-    document.getElementById("profile").innerHTML = `
-        <h3>${petData.petname}</h3>
-        <p>Owner: ${petData.owner}</p>
-        <p>Phone: ${petData.phone}</p>
-        <button onclick="callOwner()">Call Owner</button>
-        <div id="qrcode"></div>
-    `;
+const firebaseConfig = {
+  apiKey: "AIzaSyAajQDEx-_EIWI0Ur1QiHWuc1v2Gq_qsRc",
+  authDomain: "pupa-pet.firebaseapp.com",
+  projectId: "pupa-pet",
+  storageBucket: "pupa-pet.firebasestorage.app",
+  messagingSenderId: "782314476536",
+  appId: "1:782314476536:web:92f6d14f6c670f655abc0d"
+};
 
-    new QRCode(document.getElementById("qrcode"), {
-        text: window.location.href,
-        width: 200,
-        height: 200
-    });
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const urlParams = new URLSearchParams(window.location.search);
+const id = urlParams.get("id");
+
+async function loadPet() {
+
+const docRef = doc(db, "pets", id);
+const docSnap = await getDoc(docRef);
+
+if (docSnap.exists()) {
+
+document.getElementById("petname").innerHTML =
+"Pet Name: " + docSnap.data().pet_name;
+
+document.getElementById("owner").innerHTML =
+"Owner: " + docSnap.data().Owner;
+
+document.getElementById("phone").innerHTML =
+"Phone: " + docSnap.data().phone;
+
+}
 }
 
-function callOwner() {
-    window.location.href = "tel:" + petData.phone;
-}
+loadPet();
+
 </script>
 
 </body>
