@@ -5,62 +5,84 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Add Pets</title>
 <link rel="stylesheet" href="style.css">
+
+<!-- Firebase scripts -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 <script src="firebase.js"></script>
+
+<!-- QR code library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 <header>
-<h1>Add a Pet</h1>
+  <h1>Add a Pet</h1>
 </header>
 
 <main>
-<form id="petForm">
-  <input type="text" id="petName" placeholder="Pet Name" required />
-  <input type="text" id="petType" placeholder="Pet Type" required />
-  <input type="file" id="petImage" accept="image/*" required />
-  <button type="button" id="addPetBtn">Add Pet</button>
-</form>
+  <form id="petForm">
+    <input type="text" id="petName" placeholder="Pet Name" required />
+    <input type="text" id="petType" placeholder="Pet Type" required />
+    <input type="file" id="petImage" accept="image/*" required />
+    <button type="button" id="addPetBtn">Add Pet</button>
+  </form>
 
-<h2>Your QR Code</h2>
-<div id="userQrCode"></div>
+  <h2>Your QR Code</h2>
+  <div id="userQrCode"></div>
 </main>
 
 <script>
-const params = new URLSearchParams(window.location.search);
-const userId = params.get("userId");
+window.onload = () => {
+  // Get userId from URL
+  const params = new URLSearchParams(window.location.search);
+  const userId = params.get("userId");
 
-// QR code linking to profile
-const profileUrl = `${window.location.origin}/profile.html?userId=${userId}`;
-new QRCode(document.getElementById("userQrCode"), {
-  text: profileUrl, width: 200, height: 200
-});
+  if (!userId) {
+    alert("User not found! Please login first.");
+    window.location.href = "login.html";
+    return;
+  }
 
-document.getElementById("addPetBtn").addEventListener("click", () => {
-  const name = document.getElementById("petName").value.trim();
-  const type = document.getElementById("petType").value.trim();
-  const imageFile = document.getElementById("petImage").files[0];
-
-  if (!name || !type || !imageFile) return alert("All fields required!");
-
-  const storageRef = storage.ref(`pets/${userId}_${Date.now()}_${imageFile.name}`);
-  storageRef.put(imageFile).then(snapshot => {
-    snapshot.ref.getDownloadURL().then(url => {
-      db.collection("pets").add({
-        userId,
-        name,
-        type,
-        imageUrl: url,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      }).then(() => {
-        alert("Pet added!");
-        document.getElementById("petForm").reset();
-      });
-    });
+  // Show QR code linking to profile
+  const profileUrl = `${window.location.origin}/profile.html?userId=${userId}`;
+  new QRCode(document.getElementById("userQrCode"), {
+    text: profileUrl, width: 200, height: 200
   });
-});
+
+  // Add Pet button listener
+  document.getElementById("addPetBtn").addEventListener("click", () => {
+    const name = document.getElementById("petName").value.trim();
+    const type = document.getElementById("petType").value.trim();
+    const imageFile = document.getElementById("petImage").files[0];
+
+    if (!name || !type || !imageFile) {
+      alert("All fields are required!");
+      return;
+    }
+
+    // Upload image to Firebase Storage
+    const storageRef = storage.ref(`pets/${userId}_${Date.now()}_${imageFile.name}`);
+    storageRef.put(imageFile)
+      .then(snapshot => snapshot.ref.getDownloadURL())
+      .then(url => {
+        // Save pet info in Firestore
+        return db.collection("pets").add({
+          userId,
+          name,
+          type,
+          imageUrl: url,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      })
+      .then(() => {
+        alert("Pet added successfully!");
+        document.getElementById("petForm").reset();
+      })
+      .catch(err => alert("Error adding pet: " + err.message));
+  });
+};
 </script>
 </body>
 </html>
