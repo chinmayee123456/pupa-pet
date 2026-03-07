@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Profile</title>
 <link rel="stylesheet" href="style.css">
+
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <script src="firebase.js"></script>
@@ -17,10 +18,11 @@
 window.onload = async () => {
   const params = new URLSearchParams(window.location.search);
   const userId = params.get("userId");
-  if(!userId) { alert("Login first"); window.location.href="login.html"; return; }
+  if(!userId){ alert("Login first"); window.location.href="login.html"; return; }
 
   const container = document.getElementById("petsContainer");
   const snapshot = await db.collection("pets").where("userId","==",userId).get();
+
   snapshot.forEach(doc => {
     const data = doc.data();
     const card = document.createElement("div");
