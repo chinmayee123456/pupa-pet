@@ -1,59 +1,68 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>PUPA Login</title>
+<title>Pupa Pet Login</title>
 
 <style>
 
 body{
-font-family:Arial;
+font-family: Arial;
 background:#f4f6fb;
 display:flex;
 justify-content:center;
 align-items:center;
 height:100vh;
-margin:0;
 }
 
-.card{
+.login-box{
 background:white;
-padding:30px;
-border-radius:12px;
+padding:40px;
+border-radius:10px;
+box-shadow:0 5px 20px rgba(0,0,0,0.1);
 width:300px;
 text-align:center;
-box-shadow:0 5px 20px rgba(0,0,0,0.1);
+}
+
+h2{
+margin-bottom:20px;
 }
 
 input{
-width:90%;
+width:100%;
 padding:10px;
-margin:10px;
+margin:10px 0;
+border-radius:5px;
 border:1px solid #ccc;
-border-radius:6px;
 }
 
 button{
+width:100%;
+padding:10px;
 background:#4CAF50;
 color:white;
-padding:10px 20px;
 border:none;
-border-radius:6px;
+border-radius:5px;
 cursor:pointer;
+font-size:16px;
 }
 
 button:hover{
-background:#43a047;
+background:#45a049;
+}
+
+#msg{
+color:red;
+margin-top:10px;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<div class="card">
+<div class="login-box">
 
-<h2>PUPA Pet System</h2>
+<h2>Pupa Pet Login</h2>
 
 <input id="username" placeholder="Username">
 
@@ -79,7 +88,7 @@ window.location.href="register.html";
 }
 else{
 
-document.getElementById("msg").innerHTML="Wrong login";
+document.getElementById("msg").innerText="Wrong Username or Password";
 
 }
 
