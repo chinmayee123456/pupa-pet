@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,7 +20,7 @@
 <main>
 <form id="loginForm">
   <input type="email" id="email" placeholder="Email" required>
-  <input type="password" id="password" placeholder="Password" required>
+  <input type="password" id="password" placeholder="Password (min 6 chars)" required>
   <button type="submit">Login / Register</button>
 </form>
 </main>
@@ -33,18 +33,31 @@ form.addEventListener("submit", async e => {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
 
-  try {
-    const userCredential = await window.auth.signInWithEmailAndPassword(email, password)
-      .catch(async err => {
-        if(err.code === "auth/user-not-found") {
-          return await window.auth.createUserWithEmailAndPassword(email, password);
-        } else throw err;
-      });
+  if(password.length < 6){
+    return alert("Password must be at least 6 characters");
+  }
 
+  try {
+    // Try to log in
+    const userCredential = await window.auth.signInWithEmailAndPassword(email, password);
     const uid = userCredential.user.uid;
     window.location.href = `addPet.html?userId=${uid}`;
   } catch(err) {
-    alert(err.message);
+    if(err.code === "auth/user-not-found"){
+      // If user doesn't exist, create account
+      try {
+        const newUser = await window.auth.createUserWithEmailAndPassword(email, password);
+        const uid = newUser.user.uid;
+        alert("Account created successfully!");
+        window.location.href = `addPet.html?userId=${uid}`;
+      } catch(err2){
+        alert("Error creating account: " + err2.message);
+      }
+    } else if(err.code === "auth/wrong-password") {
+      alert("Wrong password! Please try again.");
+    } else {
+      alert("Login error: " + err.message);
+    }
   }
 });
 </script>
