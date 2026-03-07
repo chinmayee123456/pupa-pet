@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pupa Pet - Login</title>
 <link rel="stylesheet" href="style.css">
-
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="firebase.js"></script>
@@ -16,48 +15,44 @@
 </header>
 
 <main>
-  <h2>Register</h2>
-  <input type="text" id="regName" placeholder="Full Name" />
-  <input type="email" id="regEmail" placeholder="Email" />
-  <input type="text" id="regPhone" placeholder="Phone Number" />
-  <input type="password" id="regPass" placeholder="Password" />
-  <button id="registerBtn">Register</button>
+<h2>Register</h2>
+<input type="text" id="regName" placeholder="Full Name" />
+<input type="email" id="regEmail" placeholder="Email" />
+<input type="text" id="regPhone" placeholder="Phone Number" />
+<input type="password" id="regPass" placeholder="Password" />
+<button id="registerBtn">Register</button>
 
-  <h2>Login</h2>
-  <input type="email" id="loginEmail" placeholder="Email" />
-  <input type="password" id="loginPass" placeholder="Password" />
-  <button id="loginBtn">Login</button>
+<h2>Login</h2>
+<input type="email" id="loginEmail" placeholder="Email" />
+<input type="password" id="loginPass" placeholder="Password" />
+<button id="loginBtn">Login</button>
 </main>
 
 <script>
-// Register
 document.getElementById("registerBtn").addEventListener("click", () => {
   const name = document.getElementById("regName").value.trim();
   const email = document.getElementById("regEmail").value.trim();
   const phone = document.getElementById("regPhone").value.trim();
   const pass = document.getElementById("regPass").value;
 
-  if (!name || !email || !phone || !pass) return alert("All fields required!");
+  if(!name || !email || !phone || !pass) return alert("All fields required!");
 
   auth.createUserWithEmailAndPassword(email, pass).then(res => {
     const user = res.user;
     db.collection("users").doc(user.uid).set({
-      name,
-      email,
-      phone,
-      uid: user.uid
+      name, email, phone, uid: user.uid
     }).then(() => {
       const profileUrl = `${window.location.origin}/profile.html?userId=${user.uid}`;
-      alert("Registered! Your personal QR code is on your profile.");
-      window.location.href = `profile.html?userId=${user.uid}`;
+      alert("Registered! Your QR code is on your profile.");
+      window.location.href = `addPet.html?userId=${user.uid}`;
     });
   }).catch(err => alert(err.message));
 });
 
-// Login
 document.getElementById("loginBtn").addEventListener("click", () => {
   const email = document.getElementById("loginEmail").value.trim();
   const pass = document.getElementById("loginPass").value;
+
   auth.signInWithEmailAndPassword(email, pass).then(res => {
     const user = res.user;
     window.location.href = `addPet.html?userId=${user.uid}`;
