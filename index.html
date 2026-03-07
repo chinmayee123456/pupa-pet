@@ -1,50 +1,89 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Pupa Pet Tracker</title>
+<title>PUPA Login</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6fb;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
+
+.card{
+background:white;
+padding:30px;
+border-radius:12px;
+width:300px;
+text-align:center;
+box-shadow:0 5px 20px rgba(0,0,0,0.1);
+}
+
+input{
+width:90%;
+padding:10px;
+margin:10px;
+border:1px solid #ccc;
+border-radius:6px;
+}
+
+button{
+background:#4CAF50;
+color:white;
+padding:10px 20px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+button:hover{
+background:#43a047;
+}
+
+</style>
+
 </head>
 
 <body>
 
-<h1>Lost Pet Information</h1>
+<div class="card">
 
-<p id="pet"></p>
-<p id="owner"></p>
-<p id="phone"></p>
+<h2>PUPA Pet System</h2>
 
-<script type="module">
+<input id="username" placeholder="Username">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+<input id="password" type="password" placeholder="Password">
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAajQDEx-_EIWI0Ur1QiHWuc1v2Gq_qsRc",
-  authDomain: "pupa-pet.firebaseapp.com",
-  projectId: "pupa-pet",
-  storageBucket: "pupa-pet.firebasestorage.app",
-  messagingSenderId: "782314476536",
-  appId: "1:782314476536:web:92f6d14f6c670f655abc0d"
-};
+<button onclick="login()">Login</button>
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+<p id="msg"></p>
 
-async function loadPet() {
+</div>
 
-const docRef = doc(db, "pets", "dog123");
-const docSnap = await getDoc(docRef);
+<script>
 
-if (docSnap.exists()) {
+function login(){
 
-document.getElementById("pet").innerHTML = "Pet Name: " + docSnap.data().pet_name;
-document.getElementById("owner").innerHTML = "Owner: " + docSnap.data().Owner;
-document.getElementById("phone").innerHTML = "Phone: " + docSnap.data().phone;
+let user=document.getElementById("username").value;
+let pass=document.getElementById("password").value;
+
+if(user==="admin" && pass==="1234"){
+
+window.location.href="register.html";
+
+}
+else{
+
+document.getElementById("msg").innerHTML="Wrong login";
 
 }
 
 }
-
-loadPet();
 
 </script>
 
