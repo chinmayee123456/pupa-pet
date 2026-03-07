@@ -1,4 +1,3 @@
-// firebase.js
 const firebaseConfig = {
   apiKey: "AIzaSyAajQDEx-_EIWI0Ur1QiHWuc1v2Gq_qsRc",
   authDomain: "pupa-pet.firebaseapp.com",
