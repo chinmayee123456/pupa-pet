@@ -40,7 +40,6 @@ color:white;
 border:none;
 border-radius:5px;
 cursor:pointer;
-font-size:16px;
 }
 
 button:hover{
@@ -53,8 +52,8 @@ color:#2196F3;
 }
 
 #msg{
-margin-top:10px;
 color:red;
+margin-top:10px;
 }
 
 </style>
@@ -68,7 +67,6 @@ color:red;
 <h2>🔑 Login</h2>
 
 <input id="username" placeholder="Username or Email">
-
 <input id="password" type="password" placeholder="Password">
 
 <button onclick="login()">Login</button>
@@ -97,7 +95,9 @@ return u.username === user && u.password === pass;
 
 if(found){
 
-window.location.href="register.html";
+localStorage.setItem("loggedIn","true");
+
+window.location.href="pet.html";
 
 }
 else{
