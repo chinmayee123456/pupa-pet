@@ -12,47 +12,28 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 
-<!-- Firebase config -->
 <script src="firebase.js"></script>
-
-<!-- QR code library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-<style>
-body { font-family:'Segoe UI', sans-serif; background:#f2f4f8; margin:0; padding:0; }
-header { background:#4e8cff; color:white; padding:15px 0; text-align:center; }
-main { max-width:500px; margin:30px auto; padding:20px; background:white; border-radius:10px; }
-.step { display:none; flex-direction:column; gap:10px; }
-.step.active { display:flex; }
-input, button { width:100%; padding:12px; border-radius:6px; border:1px solid #ccc; box-sizing:border-box; }
-button { background:#4e8cff; color:white; cursor:pointer; border:none; }
-button:hover { background:#3467c1; }
-#userQrCode { margin-top:20px; display:flex; justify-content:center; }
-</style>
 </head>
 <body>
-
 <header><h1>Add a Pet</h1></header>
-
 <main>
-  <!-- Step 1: Pet Info -->
-  <div class="step active" id="step1">
-    <input type="text" id="petName" placeholder="Pet Name" required>
-    <input type="text" id="petType" placeholder="Pet Type" required>
-    <button id="nextBtn">Next</button>
-  </div>
+<div class="step active" id="step1">
+  <input type="text" id="petName" placeholder="Pet Name" required>
+  <input type="text" id="petType" placeholder="Pet Type" required>
+  <button id="nextBtn">Next</button>
+</div>
 
-  <!-- Step 2: Upload Image -->
-  <div class="step" id="step2">
-    <input type="file" id="petImage" accept="image/*" required>
-    <button id="addPetBtn">Add Pet</button>
-  </div>
+<div class="step" id="step2">
+  <input type="file" id="petImage" accept="image/*" required>
+  <button id="addPetBtn">Add Pet</button>
+</div>
 
-  <!-- Step 3: QR Code -->
-  <div class="step" id="step3">
-    <h2>Your QR Code</h2>
-    <div id="userQrCode"></div>
-  </div>
+<div class="step" id="step3">
+  <h2>Your QR Code</h2>
+  <div id="userQrCode"></div>
+  <p>Scan this QR code to view your pets anytime.</p>
+</div>
 </main>
 
 <script>
@@ -65,7 +46,6 @@ window.onload = () => {
   const step2 = document.getElementById("step2");
   const step3 = document.getElementById("step3");
 
-  // Step 1 → Step 2
   document.getElementById("nextBtn").addEventListener("click", ()=>{
     const name = document.getElementById("petName").value.trim();
     const type = document.getElementById("petType").value.trim();
@@ -74,7 +54,6 @@ window.onload = () => {
     step2.classList.add("active");
   });
 
-  // Step 2 → Step 3
   document.getElementById("addPetBtn").addEventListener("click", async ()=>{
     const imageFile = document.getElementById("petImage").files[0];
     const name = document.getElementById("petName").value.trim();
@@ -107,6 +86,5 @@ window.onload = () => {
   });
 };
 </script>
-
 </body>
 </html>
