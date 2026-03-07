@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register</title>
+<link rel="stylesheet" href="style.css">
+
+<!-- Firebase compat scripts -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+
+<!-- Firebase config -->
+<script src="firebase.js"></script>
+</head>
+<body>
+<header><h1>Register</h1></header>
+<main>
+<form id="registerForm">
+  <input type="email" id="email" placeholder="Email" required>
+  <input type="password" id="password" placeholder="Password (min 6 chars)" required>
+  <button type="submit">Register</button>
+</form>
+<p>Already have an account? <a href="login.html">Login here</a></p>
+</main>
+
+<script>
+const form = document.getElementById("registerForm");
+
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if(password.length < 6){
+    return alert("Password must be at least 6 characters");
+  }
+
+  try {
+    const userCredential = await window.auth.createUserWithEmailAndPassword(email, password);
+    const uid = userCredential.user.uid;
+    alert("Registration successful!");
+    window.location.href = `addPet.html?userId=${uid}`;
+  } catch(err){
+    alert("Registration error: " + err.message);
+  }
+});
+</script>
+</body>
+</html>
