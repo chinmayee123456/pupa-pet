@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Add Pets</title>
+
+<!-- CSS -->
 <link rel="stylesheet" href="style.css">
 
 <!-- Firebase -->
@@ -13,44 +15,8 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 <script src="firebase.js"></script>
 
-<!-- QR code -->
+<!-- QR code library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-<style>
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background:#f2f4f8; margin:0; padding:0;
-}
-header { background:#4e8cff; color:white; padding:15px 0; text-align:center; }
-main {
-  max-width:500px;
-  margin:30px auto;
-  padding:20px;
-  background:white;
-  border-radius:10px;
-}
-form {
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-input, button {
-  width:100%;
-  padding:12px;
-  border-radius:6px;
-  border:1px solid #ccc;
-  box-sizing:border-box;
-}
-button {
-  background:#4e8cff;
-  color:white;
-  border:none;
-  cursor:pointer;
-  position:relative;
-  z-index:10;
-}
-button:hover { background:#3467c1; }
-</style>
 </head>
 <body>
 <header>
@@ -80,7 +46,7 @@ window.onload = () => {
     return;
   }
 
-  // Show QR code
+  // Generate QR code
   new QRCode(document.getElementById("userQrCode"), {
     text:`${window.location.origin}/profile.html?userId=${userId}`,
     width:200,
@@ -89,7 +55,7 @@ window.onload = () => {
 
   const form = document.getElementById("petForm");
   form.addEventListener("submit", (e)=>{
-    e.preventDefault(); // STOP form from reloading page
+    e.preventDefault(); // STOP page reload
 
     const name = document.getElementById("petName").value.trim();
     const type = document.getElementById("petType").value.trim();
@@ -112,7 +78,7 @@ window.onload = () => {
         alert("Pet added successfully!");
         form.reset();
       })
-      .catch(err=>alert("Error: "+err.message));
+      .catch(err=>alert(err.message));
   });
 };
 </script>
