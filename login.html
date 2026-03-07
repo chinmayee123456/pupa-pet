@@ -1,49 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pupa Pet - Login</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyAajQDEx-_EIWI0Ur1QiHWuc1v2Gq_qsRc",
-      authDomain: "pupa-pet.firebaseapp.com",
-      projectId: "pupa-pet",
-      storageBucket: "pupa-pet.firebasestorage.app",
-      messagingSenderId: "782314476536",
-      appId: "1:782314476536:web:92f6d14f6c670f655abc0d"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pupa Pet - Login</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="firebase.js"></script>
+<script>
+function loginUser() {
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
 
-    function loginUser() {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      auth.signInWithEmailAndPassword(email, password)
-        .then(() => alert('Login Successful!'))
-        .catch(err => alert(err.message));
-    }
-  </script>
+  auth.signInWithEmailAndPassword(email, password)
+    .then(() => alert('Login Successful!'))
+    .catch(err => alert(err.message));
+}
+</script>
 </head>
 <body>
-  <header>
-    <h1>Pupa Pet Login</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="login.html">Login</a>
-      <a href="pet.html">Pets</a>
-    </nav>
-  </header>
+<header>
+  <h1>Pupa Pet Login</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="login.html">Login</a>
+    <a href="pet.html">Pets</a>
+  </nav>
+</header>
 
-  <main>
-    <h2>Login</h2>
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
-    <button onclick="loginUser()">Login</button>
-  </main>
+<main>
+  <h2>Login</h2>
+  <input type="email" id="email" placeholder="Email" />
+  <input type="password" id="password" placeholder="Password" />
+  <button onclick="loginUser()">Login</button>
+</main>
 </body>
 </html>
