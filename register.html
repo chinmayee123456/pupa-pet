@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Register Your Pet</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6fb;
+text-align:center;
+padding:20px;
+}
+
+.card{
+background:white;
+max-width:400px;
+margin:auto;
+padding:25px;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+input{
+width:90%;
+padding:12px;
+margin:10px;
+border-radius:6px;
+border:1px solid #ccc;
+font-size:16px;
+}
+
+button{
+background:#4CAF50;
+color:white;
+padding:14px;
+border:none;
+border-radius:6px;
+font-size:16px;
+width:95%;
+cursor:pointer;
+}
+
+button:hover{
+background:#3c9e41;
+}
+
+#result{
+margin-top:20px;
+font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>🐾 Register Your Pet</h2>
+
+<input id="petname" placeholder="Pet Name">
+
+<input id="owner" placeholder="Owner Name">
+
+<input id="phone" placeholder="Phone Number">
+
+<button onclick="registerPet()">Create Pet Profile</button>
+
+<div id="result"></div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyAajQDEx-_EIWI0Ur1QiHWuc1v2Gq_qsRc",
+authDomain: "pupa-pet.firebaseapp.com",
+projectId: "pupa-pet",
+storageBucket: "pupa-pet.firebasestorage.app",
+messagingSenderId: "782314476536",
+appId: "1:782314476536:web:92f6d14f6c670f655abc0d"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.registerPet = async function(){
+
+const pet = document.getElementById("petname").value;
+const owner = document.getElementById("owner").value;
+const phone = document.getElementById("phone").value;
+
+const docRef = await addDoc(collection(db,"pets"),{
+pet_name:pet,
+Owner:owner,
+phone:phone
+});
+
+const id = docRef.id;
+
+const link =
+"https://chinmayee123456.github.io/pupa-pet/pet.html?id="+id;
+
+document.getElementById("result").innerHTML =
+"Pet profile created!<br><br>"+link;
+
+}
+
+</script>
+
+</body>
+</html>
