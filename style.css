@@ -1,91 +1,44 @@
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
     margin: 0;
     padding: 0;
     background: #f2f4f8;
     color: #333;
 }
-
 header {
     background: #4e8cff;
     color: white;
     padding: 15px 0;
     text-align: center;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
 }
-
-header h1 {
-    margin: 0;
-    font-size: 1.8rem;
-}
-
-nav {
-    margin-top: 10px;
-}
-
 nav a {
     color: white;
     margin: 0 15px;
     text-decoration: none;
     font-weight: 600;
-    transition: 0.3s;
 }
-
-nav a:hover {
-    color: #ffd700;
-}
-
+nav a:hover { color: #ffd700; }
 main {
     max-width: 900px;
     margin: 30px auto;
     padding: 20px;
     background: white;
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
-
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #4e8cff;
-}
-
-input[type="text"], 
-input[type="email"], 
-input[type="password"], 
-input[type="file"] {
+input, button {
     width: 95%;
     padding: 12px;
     margin: 10px 0;
     border-radius: 6px;
     border: 1px solid #ccc;
-    box-sizing: border-box;
-    display: block;
 }
-
 button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 6px;
     background: #4e8cff;
     color: white;
-    font-size: 1rem;
+    border: none;
     cursor: pointer;
-    transition: 0.3s;
 }
-
-button:hover {
-    background: #3467c1;
-}
-
-#petContainer, #profileContainer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
+button:hover { background: #3467c1; }
 .pet-card {
     display: inline-block;
     width: 220px;
@@ -95,32 +48,14 @@ button:hover {
     border-radius: 10px;
     text-align: center;
     box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-    transition: 0.3s;
 }
-
-.pet-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-}
-
 .pet-card img {
     width: 100%;
     border-radius: 10px;
-    object-fit: cover;
     height: 180px;
+    object-fit: cover;
 }
-
-#userQrCode {
-    text-align: center;
-    margin-top: 20px;
-}
-
-/* Responsive */
 @media screen and (max-width: 600px) {
-    .pet-card {
-        width: 90%;
-    }
-    input, button {
-        width: 100%;
-    }
+    .pet-card { width: 90%; }
+    input, button { width: 100%; }
 }
