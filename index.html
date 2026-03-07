@@ -1,54 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Register Your Pet</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pupa Pet - Register</title>
 
 <style>
-
 body{
 font-family:Arial;
-background:#f4f6fb;
-text-align:center;
-padding:20px;
+background:#f2f4f8;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
 }
 
-.card{
+.box{
 background:white;
-max-width:400px;
-margin:auto;
-padding:25px;
+padding:40px;
 border-radius:10px;
-box-shadow:0 5px 15px rgba(0,0,0,0.1);
+box-shadow:0 5px 20px rgba(0,0,0,0.1);
+width:320px;
+text-align:center;
 }
 
 input{
-width:90%;
-padding:12px;
-margin:10px;
-border-radius:6px;
+width:100%;
+padding:10px;
+margin:10px 0;
+border-radius:5px;
 border:1px solid #ccc;
-font-size:16px;
 }
 
 button{
+width:100%;
+padding:10px;
 background:#4CAF50;
 color:white;
-padding:14px;
 border:none;
-border-radius:6px;
-font-size:16px;
-width:95%;
+border-radius:5px;
 cursor:pointer;
 }
 
 button:hover{
-background:#3c9e41;
+background:#43a047;
 }
 
-#result{
-margin-top:20px;
-font-weight:bold;
+a{
+color:#4CAF50;
+text-decoration:none;
 }
 
 </style>
@@ -56,58 +54,50 @@ font-weight:bold;
 
 <body>
 
-<div class="card">
+<div class="box">
 
-<h2>🐾 Register Your Pet</h2>
+<h2>🐾 Register Your Account</h2>
 
-<input id="petname" placeholder="Pet Name">
+<input id="username" placeholder="Enter Username">
 
-<input id="owner" placeholder="Owner Name">
+<input id="password" type="password" placeholder="Create Password">
 
-<input id="phone" placeholder="Phone Number">
+<button onclick="register()">Register</button>
 
-<button onclick="registerPet()">Create Pet Profile</button>
+<p style="margin-top:15px;">
+Already have an account?
+<a href="login.html">Login</a>
+</p>
 
-<div id="result"></div>
+<p id="msg"></p>
 
 </div>
 
-<script type="module">
+<script>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+function register(){
 
-const firebaseConfig = {
-apiKey: "AIzaSyAajQDEx-_EIWI0Ur1QiHWuc1v2Gq_qsRc",
-authDomain: "pupa-pet.firebaseapp.com",
-projectId: "pupa-pet",
-storageBucket: "pupa-pet.firebasestorage.app",
-messagingSenderId: "782314476536",
-appId: "1:782314476536:web:92f6d14f6c670f655abc0d"
-};
+let user=document.getElementById("username").value;
+let pass=document.getElementById("password").value;
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+let pattern=/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$]).{8,}$/;
 
-window.registerPet = async function(){
+if(user==""){
+document.getElementById("msg").innerText="Enter username";
+return;
+}
 
-const pet = document.getElementById("petname").value;
-const owner = document.getElementById("owner").value;
-const phone = document.getElementById("phone").value;
+if(!pattern.test(pass)){
+document.getElementById("msg").innerText="Password must have 8 chars, capital letter, number, special character";
+return;
+}
 
-const docRef = await addDoc(collection(db,"pets"),{
-pet_name:pet,
-Owner:owner,
-phone:phone
-});
+localStorage.setItem("user",user);
+localStorage.setItem("pass",pass);
 
-const id = docRef.id;
+alert("Registration successful");
 
-const link =
-"https://chinmayee123456.github.io/pupa-pet/pet.html?id="+id;
-
-document.getElementById("result").innerHTML =
-"Pet profile created!<br><br>"+link;
+window.location.href="login.html";
 
 }
 
