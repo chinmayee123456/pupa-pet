@@ -1,43 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pupa Pet - Home</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyAajQDEx-_EIWI0Ur1QiHWuc1v2Gq_qsRc",
-      authDomain: "pupa-pet.firebaseapp.com",
-      projectId: "pupa-pet",
-      storageBucket: "pupa-pet.firebasestorage.app",
-      messagingSenderId: "782314476536",
-      appId: "1:782314476536:web:92f6d14f6c670f655abc0d"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const storage = firebase.storage();
-    const auth = firebase.auth();
-  </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pupa Pet - Home</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+<script src="firebase.js"></script>
 </head>
 <body>
-  <header>
-    <h1>Welcome to Pupa Pet</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="login.html">Login</a>
-      <a href="pet.html">Pets</a>
-    </nav>
-  </header>
+<header>
+  <h1>Welcome to Pupa Pet</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="login.html">Login</a>
+    <a href="pet.html">Pets</a>
+  </nav>
+</header>
 
-  <main>
-    <h2>Your Pet Hub</h2>
-    <p>Manage your pets, add new pets, and view details.</p>
-  </main>
+<main>
+  <h2>Manage your pets easily!</h2>
+  <p>Go to the Pets page to add or view pets.</p>
+  <button onclick="window.location.href='pet.html'">Go to Pets</button>
+</main>
 </body>
 </html>
