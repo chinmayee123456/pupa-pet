@@ -1,6 +1,4 @@
 // firebase.js
-// Use compat SDK for browser HTML pages
-
 const firebaseConfig = {
   apiKey: "AIzaSyAajQDEx-_EIWI0Ur1QiHWuc1v2Gq_qsRc",
   authDomain: "pupa-pet.firebaseapp.com",
@@ -10,10 +8,9 @@ const firebaseConfig = {
   appId: "1:782314476536:web:92f6d14f6c670f655abc0d"
 };
 
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-// Make services globally accessible
+// Make Firebase services global
 window.auth = firebase.auth();
 window.db = firebase.firestore();
 window.storage = firebase.storage();
