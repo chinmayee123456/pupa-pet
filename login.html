@@ -4,7 +4,6 @@
 <title>Pupa Pet Login</title>
 
 <style>
-
 body{
 font-family:Arial;
 background:#f2f4f8;
@@ -41,15 +40,10 @@ border-radius:5px;
 cursor:pointer;
 }
 
-button:hover{
-background:#1976D2;
-}
-
 a{
 color:#2196F3;
 text-decoration:none;
 }
-
 </style>
 </head>
 
@@ -78,20 +72,30 @@ New user?
 
 function login(){
 
-let user=document.getElementById("username").value;
-let pass=document.getElementById("password").value;
+let user=document.getElementById("username").value.trim();
+let pass=document.getElementById("password").value.trim();
 
-let savedUser=localStorage.getItem("user");
-let savedPass=localStorage.getItem("pass");
+let users=JSON.parse(localStorage.getItem("users")) || [];
 
-if(user===savedUser && pass===savedPass){
+let found=false;
+
+for(let i=0;i<users.length;i++){
+
+if(users[i].username===user && users[i].password===pass){
+found=true;
+break;
+}
+
+}
+
+if(found){
 
 window.location.href="register.html";
 
 }
 else{
 
-document.getElementById("msg").innerText="Invalid login";
+document.getElementById("msg").innerText="Invalid username or password";
 
 }
 
