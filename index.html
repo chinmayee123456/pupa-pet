@@ -1,111 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Pupa Pet - Register</title>
-
-<style>
-body{
-font-family:Arial;
-background:#f2f4f8;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-}
-
-.box{
-background:white;
-padding:40px;
-border-radius:10px;
-box-shadow:0 5px 20px rgba(0,0,0,0.1);
-width:320px;
-text-align:center;
-}
-
-input{
-width:100%;
-padding:10px;
-margin:10px 0;
-border-radius:5px;
-border:1px solid #ccc;
-}
-
-button{
-width:100%;
-padding:10px;
-background:#4CAF50;
-color:white;
-border:none;
-border-radius:5px;
-cursor:pointer;
-}
-
-a{
-color:#4CAF50;
-text-decoration:none;
-}
-
-#msg{
-color:red;
-margin-top:10px;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pupa Pet - Home</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAajQDEx-_EIWI0Ur1QiHWuc1v2Gq_qsRc",
+      authDomain: "pupa-pet.firebaseapp.com",
+      projectId: "pupa-pet",
+      storageBucket: "pupa-pet.firebasestorage.app",
+      messagingSenderId: "782314476536",
+      appId: "1:782314476536:web:92f6d14f6c670f655abc0d"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+    const auth = firebase.auth();
+  </script>
 </head>
-
 <body>
+  <header>
+    <h1>Welcome to Pupa Pet</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="login.html">Login</a>
+      <a href="pet.html">Pets</a>
+    </nav>
+  </header>
 
-<div class="box">
-
-<h2>🐾 Register Account</h2>
-
-<input id="username" placeholder="Username or Email">
-<input id="password" type="password" placeholder="Password">
-
-<button onclick="register()">Register</button>
-
-<p style="margin-top:15px;">
-Already have an account?
-<a href="login.html">Login</a>
-</p>
-
-<p id="msg"></p>
-
-</div>
-
-<script>
-
-function register(){
-
-let user=document.getElementById("username").value.trim();
-let pass=document.getElementById("password").value.trim();
-
-if(user==="" || pass===""){
-document.getElementById("msg").innerText="Please fill all fields";
-return;
-}
-
-let users=JSON.parse(localStorage.getItem("users")) || [];
-
-let exists = users.some(function(u){
-return u.username===user;
-});
-
-if(exists){
-document.getElementById("msg").innerText="User already exists. Please login.";
-return;
-}
-
-users.push({username:user,password:pass});
-
-localStorage.setItem("users",JSON.stringify(users));
-
-alert("Registration successful!");
-
-window.location.href="login.html";
-
-}
-
-</script>
-
+  <main>
+    <h2>Your Pet Hub</h2>
+    <p>Manage your pets, add new pets, and view details.</p>
+  </main>
 </body>
 </html>
