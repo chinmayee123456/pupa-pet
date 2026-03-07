@@ -13,9 +13,20 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 <script src="firebase.js"></script>
 
-<!-- QR code -->
+<!-- QR code library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
+<style>
+body { font-family:'Segoe UI', sans-serif; background:#f2f4f8; margin:0; padding:0; }
+header { background:#4e8cff; color:white; padding:15px 0; text-align:center; }
+main { max-width:500px; margin:30px auto; padding:20px; background:white; border-radius:10px; }
+.step { display:none; flex-direction:column; gap:10px; }
+.step.active { display:flex; }
+input, button { width:100%; padding:12px; border-radius:6px; border:1px solid #ccc; box-sizing:border-box; }
+button { background:#4e8cff; color:white; cursor:pointer; border:none; position:relative; z-index:10; }
+button:hover { background:#3467c1; }
+#userQrCode { margin-top:20px; display:flex; justify-content:center; }
+</style>
 </head>
 <body>
 <header><h1>Add a Pet</h1></header>
@@ -61,7 +72,7 @@ window.onload = () => {
     step2.classList.add("active");
   });
 
-  // Step 2 → Upload and Step 3
+  // Step 2 → Step 3
   document.getElementById("addPetBtn").addEventListener("click", async ()=>{
     const imageFile = document.getElementById("petImage").files[0];
     const name = document.getElementById("petName").value.trim();
