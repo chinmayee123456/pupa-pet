@@ -1,139 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pupa Pet - Pets</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAajQDEx-_EIWI0Ur1QiHWuc1v2Gq_qsRc",
+      authDomain: "pupa-pet.firebaseapp.com",
+      projectId: "pupa-pet",
+      storageBucket: "pupa-pet.firebasestorage.app",
+      messagingSenderId: "782314476536",
+      appId: "1:782314476536:web:92f6d14f6c670f655abc0d"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const storage = firebase.storage();
 
-<title>Pupa Pet Registration</title>
+    function addPet() {
+      const name = document.getElementById('petName').value;
+      const type = document.getElementById('petType').value;
 
-<style>
-
-body{
-font-family:Arial;
-background:#f2f4f8;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-}
-
-.box{
-background:white;
-padding:40px;
-border-radius:10px;
-box-shadow:0 5px 20px rgba(0,0,0,0.1);
-width:350px;
-text-align:center;
-}
-
-input{
-width:100%;
-padding:10px;
-margin:10px 0;
-border-radius:5px;
-border:1px solid #ccc;
-}
-
-button{
-width:100%;
-padding:10px;
-background:#4CAF50;
-color:white;
-border:none;
-border-radius:5px;
-cursor:pointer;
-}
-
-#link{
-margin-top:15px;
-word-break:break-all;
-color:green;
-}
-
-</style>
-
+      db.collection("pets").add({
+        name: name,
+        type: type,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => alert("Pet added!"))
+      .catch(err => console.error(err));
+    }
+  </script>
 </head>
-
 <body>
+  <header>
+    <h1>Pupa Pet Management</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="login.html">Login</a>
+      <a href="pet.html">Pets</a>
+    </nav>
+  </header>
 
-<div class="box">
-
-<h2>🐾 Register Your Pet</h2>
-
-<input id="petName" placeholder="Pet Name">
-
-<input id="breed" placeholder="Breed">
-
-<input id="owner" placeholder="Owner Name">
-
-<input id="phone" placeholder="Phone Number">
-
-<button onclick="createPet()">Create Pet Profile</button>
-
-<p id="link"></p>
-
-</div>
-
-
-<!-- LOGIN PROTECTION -->
-<script>
-
-if(localStorage.getItem("loggedIn")!=="true"){
-
-window.location.href="login.html";
-
-}
-
-</script>
-
-
-<!-- FIREBASE -->
-
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-
-
-<script>
-
-const firebaseConfig = {
-
-apiKey: "YOUR_API_KEY",
-authDomain: "YOUR_PROJECT.firebaseapp.com",
-projectId: "YOUR_PROJECT_ID",
-
-};
-
-firebase.initializeApp(firebaseConfig);
-
-const db = firebase.firestore();
-
-
-function createPet(){
-
-let petName=document.getElementById("petName").value;
-let breed=document.getElementById("breed").value;
-let owner=document.getElementById("owner").value;
-let phone=document.getElementById("phone").value;
-
-db.collection("pets").add({
-
-name:petName,
-breed:breed,
-owner:owner,
-phone:phone
-
-})
-
-.then((doc)=>{
-
-let link=window.location.origin+"/pupa-pet/pet.html?id="+doc.id;
-
-document.getElementById("link").innerHTML=
-"Pet profile created!<br><br>"+link;
-
-});
-
-}
-
-</script>
-
+  <main>
+    <h2>Add a Pet</h2>
+    <input type="text" id="petName" placeholder="Pet Name" />
+    <input type="text" id="petType" placeholder="Pet Type" />
+    <button onclick="addPet()">Add Pet</button>
+  </main>
 </body>
 </html>
