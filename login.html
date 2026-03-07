@@ -14,7 +14,7 @@ align-items:center;
 height:100vh;
 }
 
-.login-box{
+.box{
 background:white;
 padding:40px;
 border-radius:10px;
@@ -34,7 +34,7 @@ border:1px solid #ccc;
 button{
 width:100%;
 padding:10px;
-background:#4CAF50;
+background:#2196F3;
 color:white;
 border:none;
 border-radius:5px;
@@ -42,49 +42,33 @@ cursor:pointer;
 }
 
 button:hover{
-background:#43a047;
+background:#1976D2;
 }
 
-.rules{
-font-size:12px;
-text-align:left;
-color:#555;
-margin-top:10px;
-}
-
-#msg{
-color:red;
-margin-top:10px;
+a{
+color:#2196F3;
+text-decoration:none;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<div class="login-box">
+<div class="box">
 
-<h2>Pupa Pet Login</h2>
+<h2>🔑 Login</h2>
 
-<input id="username" placeholder="Enter Username or Email">
+<input id="username" placeholder="Username">
 
-<input id="password" type="password" placeholder="Create Password">
-
-<div class="rules">
-
-Password must contain:
-
-<ul>
-<li>At least 8 characters</li>
-<li>One uppercase letter</li>
-<li>One number</li>
-<li>One special character (!@#$)</li>
-</ul>
-
-</div>
+<input id="password" type="password" placeholder="Password">
 
 <button onclick="login()">Login</button>
+
+<p style="margin-top:15px;">
+New user?
+<a href="index.html">Register</a>
+</p>
 
 <p id="msg"></p>
 
@@ -97,25 +81,19 @@ function login(){
 let user=document.getElementById("username").value;
 let pass=document.getElementById("password").value;
 
-let pattern=/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/;
+let savedUser=localStorage.getItem("user");
+let savedPass=localStorage.getItem("pass");
 
-if(user=="" ){
-
-document.getElementById("msg").innerText="Please enter username";
-
-return;
-
-}
-
-if(!pattern.test(pass)){
-
-document.getElementById("msg").innerText="Password does not meet requirements";
-
-return;
-
-}
+if(user===savedUser && pass===savedPass){
 
 window.location.href="register.html";
+
+}
+else{
+
+document.getElementById("msg").innerText="Invalid login";
+
+}
 
 }
 
