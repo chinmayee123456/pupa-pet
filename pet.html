@@ -1,136 +1,123 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>PUPA Pet Profile</title>
+  <title>Pupa Pet ID</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-<style>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAajQDEx-_EIWI0Ur1QiHWuc1v2Gq_qsRc",
+      authDomain: "pupa-pet.firebaseapp.com",
+      projectId: "pupa-pet",
+      storageBucket: "pupa-pet.firebasestorage.app",
+      messagingSenderId: "782314476536",
+      appId: "1:782314476536:web:92f6d14f6c670f655abc0d"
+    };
 
-body{
-font-family: Arial, sans-serif;
-background:#f5f7fb;
-margin:0;
-padding:0;
-text-align:center;
-}
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-.container{
-max-width:400px;
-margin:40px auto;
-background:white;
-padding:25px;
-border-radius:12px;
-box-shadow:0 5px 15px rgba(0,0,0,0.1);
-}
+    const params = new URLSearchParams(window.location.search);
+    const petId = params.get("id");
 
-h1{
-color:#333;
-}
+    async function loadPet() {
+      const docRef = doc(db, "pets", petId);
+      const docSnap = await getDoc(docRef);
 
-.pet-img{
-width:150px;
-height:150px;
-border-radius:50%;
-object-fit:cover;
-margin-bottom:15px;
-}
+      if (docSnap.exists()) {
+        const data = docSnap.data();
 
-.info{
-font-size:18px;
-margin:10px 0;
-color:#444;
-}
+        document.getElementById("petName").innerText = data.name;
+        document.getElementById("petBreed").innerText = data.breed;
+        document.getElementById("ownerName").innerText = data.owner;
+        document.getElementById("phone").innerText = data.phone;
+      } else {
+        document.getElementById("card").innerHTML = "Pet not found";
+      }
+    }
 
-.call-btn{
-display:block;
-background:#4CAF50;
-color:white;
-text-decoration:none;
-padding:15px;
-margin-top:20px;
-border-radius:8px;
-font-size:18px;
-font-weight:bold;
-}
+    loadPet();
+  </script>
 
-.call-btn:hover{
-background:#3fa047;
-}
+  <style>
+    body{
+      font-family: Arial;
+      background:#f4f6fb;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+      margin:0;
+    }
 
-.warning{
-background:#ffe8e8;
-padding:10px;
-border-radius:6px;
-margin-bottom:15px;
-font-size:14px;
-color:#b00020;
-}
+    .card{
+      background:white;
+      padding:30px;
+      border-radius:15px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.1);
+      width:320px;
+      text-align:center;
+    }
 
-</style>
+    .peticon{
+      font-size:50px;
+    }
+
+    h1{
+      margin:10px 0;
+      color:#333;
+    }
+
+    .info{
+      margin:10px 0;
+      font-size:18px;
+      color:#555;
+    }
+
+    .callbtn{
+      margin-top:20px;
+      display:inline-block;
+      padding:12px 20px;
+      background:#4CAF50;
+      color:white;
+      text-decoration:none;
+      border-radius:8px;
+      font-weight:bold;
+    }
+
+    .callbtn:hover{
+      background:#43a047;
+    }
+
+  </style>
+
 </head>
 
 <body>
 
-<div class="container">
+<div class="card" id="card">
 
-<h1>🐾 Pet Profile</h1>
+<div class="peticon">🐾</div>
 
-<div class="warning">
-If you found this pet please contact the owner below
+<h1 id="petName">Loading...</h1>
+
+<div class="info">Breed: <span id="petBreed"></span></div>
+
+<div class="info">Owner: <span id="ownerName"></span></div>
+
+<div class="info">Phone: <span id="phone"></span></div>
+
+<a class="callbtn" id="callButton">📞 Call Owner</a>
+
 </div>
 
-<img id="petimg" class="pet-img" src="https://place-puppy.com/300x300">
-
-<div class="info" id="petname"></div>
-<div class="info" id="owner"></div>
-
-<a id="phone" class="call-btn">📞 Call Owner</a>
-
-</div>
-
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const firebaseConfig = {
-apiKey: "AIzaSyAajQDEx-_EIWI0Ur1QiHWuc1v2Gq_qsRc",
-authDomain: "pupa-pet.firebaseapp.com",
-projectId: "pupa-pet",
-storageBucket: "pupa-pet.firebasestorage.app",
-messagingSenderId: "782314476536",
-appId: "1:782314476536:web:92f6d14f6c670f655abc0d"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-const urlParams = new URLSearchParams(window.location.search);
-const id = urlParams.get("id");
-
-async function loadPet(){
-
-const docRef = doc(db,"pets",id);
-const docSnap = await getDoc(docRef);
-
-if(docSnap.exists()){
-
-document.getElementById("petname").innerHTML =
-"🐶 " + docSnap.data().pet_name;
-
-document.getElementById("owner").innerHTML =
-"Owner: " + docSnap.data().Owner;
-
-document.getElementById("phone").href =
-"tel:" + docSnap.data().phone;
-
-}
-
-}
-
-loadPet();
-
+<script>
+setTimeout(()=>{
+  const phone = document.getElementById("phone").innerText;
+  document.getElementById("callButton").href = "tel:"+phone;
+},1000);
 </script>
 
 </body>
