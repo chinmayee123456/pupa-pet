@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login / Register</title>
+<title>Login</title>
 <link rel="stylesheet" href="style.css">
 
 <!-- Firebase compat scripts -->
@@ -16,13 +16,14 @@
 <script src="firebase.js"></script>
 </head>
 <body>
-<header><h1>Login / Register</h1></header>
+<header><h1>Login</h1></header>
 <main>
 <form id="loginForm">
   <input type="email" id="email" placeholder="Email" required>
-  <input type="password" id="password" placeholder="Password (min 6 chars)" required>
-  <button type="submit">Login / Register</button>
+  <input type="password" id="password" placeholder="Password" required>
+  <button type="submit">Login</button>
 </form>
+<p>New user? <a href="register.html">Register here</a></p>
 </main>
 
 <script>
@@ -33,28 +34,15 @@ form.addEventListener("submit", async e => {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
 
-  if(password.length < 6){
-    return alert("Password must be at least 6 characters");
-  }
-
   try {
-    // Try to log in
     const userCredential = await window.auth.signInWithEmailAndPassword(email, password);
     const uid = userCredential.user.uid;
     window.location.href = `addPet.html?userId=${uid}`;
-  } catch(err) {
-    if(err.code === "auth/user-not-found"){
-      // If user doesn't exist, create account
-      try {
-        const newUser = await window.auth.createUserWithEmailAndPassword(email, password);
-        const uid = newUser.user.uid;
-        alert("Account created successfully!");
-        window.location.href = `addPet.html?userId=${uid}`;
-      } catch(err2){
-        alert("Error creating account: " + err2.message);
-      }
+  } catch(err){
+    if(err.code === "auth/user-not-found") {
+      alert("User not found. Please register first.");
     } else if(err.code === "auth/wrong-password") {
-      alert("Wrong password! Please try again.");
+      alert("Incorrect password.");
     } else {
       alert("Login error: " + err.message);
     }
