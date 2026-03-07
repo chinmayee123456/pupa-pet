@@ -3,27 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pupa Pet - Pets</title>
+<title>Pupa Pet Tracker</title>
 <link rel="stylesheet" href="style.css">
+
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+
+<!-- QR Code Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
 <script src="firebase.js"></script>
+
 <script>
+// Add a pet and generate QR code
 function addPet() {
   const name = document.getElementById('petName').value;
   const type = document.getElementById('petType').value;
+  const owner = document.getElementById('ownerName').value;
+  const phone = document.getElementById('ownerPhone').value;
   const imageFile = document.getElementById('petImage').files[0];
 
-  if(!name || !type || !imageFile) return alert("All fields required!");
+  if (!name || !type || !owner || !phone || !imageFile) return alert("All fields required!");
 
   const storageRef = storage.ref('pets/' + imageFile.name);
   storageRef.put(imageFile).then(snapshot => {
     snapshot.ref.getDownloadURL().then(url => {
+      // Combine pet info for QR code
+      const qrData = JSON.stringify({name, owner, phone});
+
       db.collection("pets").add({
         name: name,
         type: type,
+        owner: owner,
+        phone: phone,
         imageUrl: url,
+        qrData: qrData,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       }).then(() => {
         alert("Pet added!");
@@ -34,18 +50,29 @@ function addPet() {
   });
 }
 
+// Load pets and display QR codes
 function loadPets() {
   const container = document.getElementById('petContainer');
   container.innerHTML = "";
-  db.collection("pets").orderBy("createdAt","desc").get().then(snapshot => {
+  db.collection("pets").orderBy("createdAt", "desc").get().then(snapshot => {
     snapshot.forEach(doc => {
       const data = doc.data();
-      container.innerHTML += `
-        <div class="pet-card">
-          <img src="${data.imageUrl}" alt="${data.name}">
-          <h3>${data.name}</h3>
-          <p>${data.type}</p>
-        </div>`;
+      const card = document.createElement('div');
+      card.className = 'pet-card';
+      card.innerHTML = `
+        <img src="${data.imageUrl}" alt="${data.name}">
+        <h3>${data.name}</h3>
+        <p>Type: ${data.type}</p>
+        <p>Owner: ${data.owner}</p>
+      `;
+      const qrDiv = document.createElement('div');
+      new QRCode(qrDiv, {
+        text: data.qrData,
+        width: 120,
+        height: 120
+      });
+      card.appendChild(qrDiv);
+      container.appendChild(card);
     });
   });
 }
@@ -55,7 +82,7 @@ window.onload = loadPets;
 </head>
 <body>
 <header>
-  <h1>Pupa Pet Management</h1>
+  <h1>Pupa Pet Tracker</h1>
   <nav>
     <a href="index.html">Home</a>
     <a href="login.html">Login</a>
@@ -64,15 +91,17 @@ window.onload = loadPets;
 </header>
 
 <main>
-  <h2>Add a Pet</h2>
+  <h2>Register a Pet</h2>
   <form id="petForm" onsubmit="event.preventDefault(); addPet();">
     <input type="text" id="petName" placeholder="Pet Name" />
     <input type="text" id="petType" placeholder="Pet Type" />
+    <input type="text" id="ownerName" placeholder="Owner Name" />
+    <input type="text" id="ownerPhone" placeholder="Owner Phone Number" />
     <input type="file" id="petImage" accept="image/*" />
     <button type="submit">Add Pet</button>
   </form>
 
-  <h2>All Pets</h2>
+  <h2>Registered Pets</h2>
   <div id="petContainer"></div>
 </main>
 </body>
