@@ -23,7 +23,7 @@ main { max-width:500px; margin:30px auto; padding:20px; background:white; border
 .step { display:none; flex-direction:column; gap:10px; }
 .step.active { display:flex; }
 input, button { width:100%; padding:12px; border-radius:6px; border:1px solid #ccc; box-sizing:border-box; }
-button { background:#4e8cff; color:white; cursor:pointer; position:relative; z-index:10; border:none;}
+button { background:#4e8cff; color:white; cursor:pointer; border:none; position:relative; z-index:10; }
 button:hover { background:#3467c1; }
 #userQrCode { margin-top:20px; display:flex; justify-content:center; }
 </style>
@@ -78,33 +78,41 @@ window.onload = () => {
   });
 
   // Step 2 → Upload and Step 3
-  document.getElementById("addPetBtn").addEventListener("click", ()=>{
+  document.getElementById("addPetBtn").addEventListener("click", async ()=>{
     const imageFile = document.getElementById("petImage").files[0];
     const name = document.getElementById("petName").value.trim();
     const type = document.getElementById("petType").value.trim();
     if(!imageFile) return alert("Select an image!");
 
-    const storageRef = storage.ref(`pets/${userId}_${Date.now()}_${imageFile.name}`);
-    storageRef.put(imageFile)
-      .then(snap=>snap.ref.getDownloadURL())
-      .then(url=>{
-        return db.collection("pets").add({
-          userId, name, type, imageUrl:url,
-          createdAt:firebase.firestore.FieldValue.serverTimestamp()
-        });
-      })
-      .then(()=>{
-        alert("Pet added successfully!");
-        step2.classList.remove("active");
-        step3.classList.add("active");
+    try {
+      // Upload image
+      const storageRef = storage.ref(`pets/${userId}_${Date.now()}_${imageFile.name}`);
+      const snapshot = await storageRef.put(imageFile);
+      const url = await snapshot.ref.getDownloadURL();
 
-        new QRCode(document.getElementById("userQrCode"), {
-          text:`${window.location.origin}/profile.html?userId=${userId}`,
-          width:200,
-          height:200
-        });
-      })
-      .catch(err=>alert(err.message));
+      // Save pet in Firestore
+      await db.collection("pets").add({
+        userId,
+        name,
+        type,
+        imageUrl: url,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      alert("Pet added successfully!");
+      step2.classList.remove("active");
+      step3.classList.add("active");
+
+      // Generate QR code for profile
+      new QRCode(document.getElementById("userQrCode"), {
+        text:`${window.location.origin}/profile.html?userId=${userId}`,
+        width:200,
+        height:200
+      });
+    } catch(err){
+      console.error(err);
+      alert("Error adding pet: " + err.message);
+    }
   });
 };
 </script>
