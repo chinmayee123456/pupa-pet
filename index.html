@@ -40,15 +40,10 @@ border-radius:5px;
 cursor:pointer;
 }
 
-button:hover{
-background:#43a047;
-}
-
 a{
 color:#4CAF50;
 text-decoration:none;
 }
-
 </style>
 </head>
 
@@ -58,9 +53,9 @@ text-decoration:none;
 
 <h2>🐾 Register Your Account</h2>
 
-<input id="username" placeholder="Enter Username">
+<input id="username" placeholder="Username">
 
-<input id="password" type="password" placeholder="Create Password">
+<input id="password" type="password" placeholder="Password">
 
 <button onclick="register()">Register</button>
 
@@ -77,25 +72,21 @@ Already have an account?
 
 function register(){
 
-let user=document.getElementById("username").value;
-let pass=document.getElementById("password").value;
+let user=document.getElementById("username").value.trim();
+let pass=document.getElementById("password").value.trim();
 
-let pattern=/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$]).{8,}$/;
-
-if(user==""){
-document.getElementById("msg").innerText="Enter username";
+if(user=="" || pass==""){
+document.getElementById("msg").innerText="Fill all fields";
 return;
 }
 
-if(!pattern.test(pass)){
-document.getElementById("msg").innerText="Password must have 8 chars, capital letter, number, special character";
-return;
-}
+let users=JSON.parse(localStorage.getItem("users")) || [];
 
-localStorage.setItem("user",user);
-localStorage.setItem("pass",pass);
+users.push({username:user,password:pass});
 
-alert("Registration successful");
+localStorage.setItem("users",JSON.stringify(users));
+
+alert("Registration successful!");
 
 window.location.href="login.html";
 
