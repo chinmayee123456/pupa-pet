@@ -6,8 +6,8 @@
 <style>
 
 body{
-font-family: Arial;
-background:#f4f6fb;
+font-family:Arial;
+background:#f2f4f8;
 display:flex;
 justify-content:center;
 align-items:center;
@@ -19,12 +19,8 @@ background:white;
 padding:40px;
 border-radius:10px;
 box-shadow:0 5px 20px rgba(0,0,0,0.1);
-width:300px;
+width:320px;
 text-align:center;
-}
-
-h2{
-margin-bottom:20px;
 }
 
 input{
@@ -43,11 +39,17 @@ color:white;
 border:none;
 border-radius:5px;
 cursor:pointer;
-font-size:16px;
 }
 
 button:hover{
-background:#45a049;
+background:#43a047;
+}
+
+.rules{
+font-size:12px;
+text-align:left;
+color:#555;
+margin-top:10px;
 }
 
 #msg{
@@ -56,6 +58,7 @@ margin-top:10px;
 }
 
 </style>
+
 </head>
 
 <body>
@@ -64,9 +67,22 @@ margin-top:10px;
 
 <h2>Pupa Pet Login</h2>
 
-<input id="username" placeholder="Username">
+<input id="username" placeholder="Enter Username or Email">
 
-<input id="password" type="password" placeholder="Password">
+<input id="password" type="password" placeholder="Create Password">
+
+<div class="rules">
+
+Password must contain:
+
+<ul>
+<li>At least 8 characters</li>
+<li>One uppercase letter</li>
+<li>One number</li>
+<li>One special character (!@#$)</li>
+</ul>
+
+</div>
 
 <button onclick="login()">Login</button>
 
@@ -81,16 +97,25 @@ function login(){
 let user=document.getElementById("username").value;
 let pass=document.getElementById("password").value;
 
-if(user==="admin" && pass==="1234"){
+let pattern=/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/;
+
+if(user=="" ){
+
+document.getElementById("msg").innerText="Please enter username";
+
+return;
+
+}
+
+if(!pattern.test(pass)){
+
+document.getElementById("msg").innerText="Password does not meet requirements";
+
+return;
+
+}
 
 window.location.href="register.html";
-
-}
-else{
-
-document.getElementById("msg").innerText="Wrong Username or Password";
-
-}
 
 }
 
