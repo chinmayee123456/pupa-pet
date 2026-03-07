@@ -1,4 +1,4 @@
-// Firebase config - replace with your project values
+// firebase.js
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -12,4 +12,4 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const storage = firebase.storage();
-const auth = firebase.auth();
+const auth = firebase.auth();  // ← This is crucial
