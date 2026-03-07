@@ -6,79 +6,16 @@
 <title>Pupa Pet Tracker</title>
 <link rel="stylesheet" href="style.css">
 
-<!-- Firebase -->
+<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 
-<!-- QR Code Library -->
+<!-- QRCode library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
+<!-- Firebase configuration -->
 <script src="firebase.js"></script>
-
-<script>
-// Add a pet and generate QR code
-function addPet() {
-  const name = document.getElementById('petName').value;
-  const type = document.getElementById('petType').value;
-  const owner = document.getElementById('ownerName').value;
-  const phone = document.getElementById('ownerPhone').value;
-  const imageFile = document.getElementById('petImage').files[0];
-
-  if (!name || !type || !owner || !phone || !imageFile) return alert("All fields required!");
-
-  const storageRef = storage.ref('pets/' + imageFile.name);
-  storageRef.put(imageFile).then(snapshot => {
-    snapshot.ref.getDownloadURL().then(url => {
-      // Combine pet info for QR code
-      const qrData = JSON.stringify({name, owner, phone});
-
-      db.collection("pets").add({
-        name: name,
-        type: type,
-        owner: owner,
-        phone: phone,
-        imageUrl: url,
-        qrData: qrData,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      }).then(() => {
-        alert("Pet added!");
-        document.getElementById('petForm').reset();
-        loadPets();
-      });
-    });
-  });
-}
-
-// Load pets and display QR codes
-function loadPets() {
-  const container = document.getElementById('petContainer');
-  container.innerHTML = "";
-  db.collection("pets").orderBy("createdAt", "desc").get().then(snapshot => {
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      const card = document.createElement('div');
-      card.className = 'pet-card';
-      card.innerHTML = `
-        <img src="${data.imageUrl}" alt="${data.name}">
-        <h3>${data.name}</h3>
-        <p>Type: ${data.type}</p>
-        <p>Owner: ${data.owner}</p>
-      `;
-      const qrDiv = document.createElement('div');
-      new QRCode(qrDiv, {
-        text: data.qrData,
-        width: 120,
-        height: 120
-      });
-      card.appendChild(qrDiv);
-      container.appendChild(card);
-    });
-  });
-}
-
-window.onload = loadPets;
-</script>
 </head>
 <body>
 <header>
@@ -92,17 +29,94 @@ window.onload = loadPets;
 
 <main>
   <h2>Register a Pet</h2>
-  <form id="petForm" onsubmit="event.preventDefault(); addPet();">
-    <input type="text" id="petName" placeholder="Pet Name" />
-    <input type="text" id="petType" placeholder="Pet Type" />
-    <input type="text" id="ownerName" placeholder="Owner Name" />
-    <input type="text" id="ownerPhone" placeholder="Owner Phone Number" />
-    <input type="file" id="petImage" accept="image/*" />
-    <button type="submit">Add Pet</button>
+  <form id="petForm">
+    <input type="text" id="petName" placeholder="Pet Name" required />
+    <input type="text" id="petType" placeholder="Pet Type" required />
+    <input type="text" id="ownerName" placeholder="Owner Name" required />
+    <input type="text" id="ownerPhone" placeholder="Owner Phone Number" required />
+    <input type="file" id="petImage" accept="image/*" required />
+    <button type="button" id="addPetBtn">Add Pet</button>
   </form>
 
   <h2>Registered Pets</h2>
-  <div id="petContainer"></div>
+  <div id="petContainer" style="display:flex; flex-wrap: wrap;"></div>
 </main>
+
+<script>
+// Add pet button click handler
+document.getElementById("addPetBtn").addEventListener("click", () => {
+  const name = document.getElementById('petName').value.trim();
+  const type = document.getElementById('petType').value.trim();
+  const owner = document.getElementById('ownerName').value.trim();
+  const phone = document.getElementById('ownerPhone').value.trim();
+  const imageFile = document.getElementById('petImage').files[0];
+
+  if (!name || !type || !owner || !phone || !imageFile) {
+    return alert("All fields are required!");
+  }
+
+  const storageRef = storage.ref('pets/' + Date.now() + '_' + imageFile.name);
+
+  storageRef.put(imageFile).then(snapshot => {
+    snapshot.ref.getDownloadURL().then(url => {
+      const qrData = JSON.stringify({name, owner, phone});
+
+      db.collection("pets").add({
+        name,
+        type,
+        owner,
+        phone,
+        imageUrl: url,
+        qrData,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(() => {
+        alert("Pet added successfully!");
+        document.getElementById('petForm').reset();
+        loadPets();
+      }).catch(err => console.error(err));
+    });
+  });
+});
+
+// Load pets from Firestore
+function loadPets() {
+  const container = document.getElementById('petContainer');
+  container.innerHTML = "";
+  db.collection("pets").orderBy("createdAt", "desc").get().then(snapshot => {
+    snapshot.forEach(doc => {
+      const data = doc.data();
+
+      const card = document.createElement('div');
+      card.className = 'pet-card';
+      card.style.margin = "10px";
+      card.style.padding = "10px";
+      card.style.background = "#e0f0ff";
+      card.style.borderRadius = "10px";
+      card.style.width = "200px";
+      card.style.textAlign = "center";
+      card.style.boxShadow = "0 3px 8px rgba(0,0,0,0.1)";
+
+      card.innerHTML = `
+        <img src="${data.imageUrl}" alt="${data.name}" style="width:100%; border-radius:10px;">
+        <h3>${data.name}</h3>
+        <p>Type: ${data.type}</p>
+        <p>Owner: ${data.owner}</p>
+      `;
+
+      const qrDiv = document.createElement('div');
+      new QRCode(qrDiv, {
+        text: data.qrData,
+        width: 120,
+        height: 120
+      });
+
+      card.appendChild(qrDiv);
+      container.appendChild(card);
+    });
+  });
+}
+
+window.onload = loadPets;
+</script>
 </body>
 </html>
