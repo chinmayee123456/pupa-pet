@@ -79,12 +79,19 @@ document.getElementById("msg").innerText="Please fill all fields";
 return;
 }
 
-let users=JSON.parse(localStorage.getItem("users"));
+let users=JSON.parse(localStorage.getItem("users")) || [];
 
-if(!users){
-users=[];
+// check if username already exists
+let exists = users.some(function(u){
+return u.username === user;
+});
+
+if(exists){
+document.getElementById("msg").innerText="User already exists. Please login.";
+return;
 }
 
+// add new user
 users.push({
 username:user,
 password:pass
