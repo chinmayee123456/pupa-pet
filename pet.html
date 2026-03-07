@@ -1,123 +1,138 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Pupa Pet ID</title>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+<title>Pupa Pet Registration</title>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAajQDEx-_EIWI0Ur1QiHWuc1v2Gq_qsRc",
-      authDomain: "pupa-pet.firebaseapp.com",
-      projectId: "pupa-pet",
-      storageBucket: "pupa-pet.firebasestorage.app",
-      messagingSenderId: "782314476536",
-      appId: "1:782314476536:web:92f6d14f6c670f655abc0d"
-    };
+<style>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+body{
+font-family:Arial;
+background:#f2f4f8;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
 
-    const params = new URLSearchParams(window.location.search);
-    const petId = params.get("id");
+.box{
+background:white;
+padding:40px;
+border-radius:10px;
+box-shadow:0 5px 20px rgba(0,0,0,0.1);
+width:350px;
+text-align:center;
+}
 
-    async function loadPet() {
-      const docRef = doc(db, "pets", petId);
-      const docSnap = await getDoc(docRef);
+input{
+width:100%;
+padding:10px;
+margin:10px 0;
+border-radius:5px;
+border:1px solid #ccc;
+}
 
-      if (docSnap.exists()) {
-        const data = docSnap.data();
+button{
+width:100%;
+padding:10px;
+background:#4CAF50;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
 
-        document.getElementById("petName").innerText = data.name;
-        document.getElementById("petBreed").innerText = data.breed;
-        document.getElementById("ownerName").innerText = data.owner;
-        document.getElementById("phone").innerText = data.phone;
-      } else {
-        document.getElementById("card").innerHTML = "Pet not found";
-      }
-    }
+#link{
+margin-top:15px;
+word-break:break-all;
+color:green;
+}
 
-    loadPet();
-  </script>
-
-  <style>
-    body{
-      font-family: Arial;
-      background:#f4f6fb;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      height:100vh;
-      margin:0;
-    }
-
-    .card{
-      background:white;
-      padding:30px;
-      border-radius:15px;
-      box-shadow:0 10px 30px rgba(0,0,0,0.1);
-      width:320px;
-      text-align:center;
-    }
-
-    .peticon{
-      font-size:50px;
-    }
-
-    h1{
-      margin:10px 0;
-      color:#333;
-    }
-
-    .info{
-      margin:10px 0;
-      font-size:18px;
-      color:#555;
-    }
-
-    .callbtn{
-      margin-top:20px;
-      display:inline-block;
-      padding:12px 20px;
-      background:#4CAF50;
-      color:white;
-      text-decoration:none;
-      border-radius:8px;
-      font-weight:bold;
-    }
-
-    .callbtn:hover{
-      background:#43a047;
-    }
-
-  </style>
+</style>
 
 </head>
 
 <body>
 
-<div class="card" id="card">
+<div class="box">
 
-<div class="peticon">🐾</div>
+<h2>🐾 Register Your Pet</h2>
 
-<h1 id="petName">Loading...</h1>
+<input id="petName" placeholder="Pet Name">
 
-<div class="info">Breed: <span id="petBreed"></span></div>
+<input id="breed" placeholder="Breed">
 
-<div class="info">Owner: <span id="ownerName"></span></div>
+<input id="owner" placeholder="Owner Name">
 
-<div class="info">Phone: <span id="phone"></span></div>
+<input id="phone" placeholder="Phone Number">
 
-<a class="callbtn" id="callButton">📞 Call Owner</a>
+<button onclick="createPet()">Create Pet Profile</button>
+
+<p id="link"></p>
 
 </div>
 
+
+<!-- LOGIN PROTECTION -->
 <script>
-setTimeout(()=>{
-  const phone = document.getElementById("phone").innerText;
-  document.getElementById("callButton").href = "tel:"+phone;
-},1000);
+
+if(localStorage.getItem("loggedIn")!=="true"){
+
+window.location.href="login.html";
+
+}
+
+</script>
+
+
+<!-- FIREBASE -->
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+
+<script>
+
+const firebaseConfig = {
+
+apiKey: "YOUR_API_KEY",
+authDomain: "YOUR_PROJECT.firebaseapp.com",
+projectId: "YOUR_PROJECT_ID",
+
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.firestore();
+
+
+function createPet(){
+
+let petName=document.getElementById("petName").value;
+let breed=document.getElementById("breed").value;
+let owner=document.getElementById("owner").value;
+let phone=document.getElementById("phone").value;
+
+db.collection("pets").add({
+
+name:petName,
+breed:breed,
+owner:owner,
+phone:phone
+
+})
+
+.then((doc)=>{
+
+let link=window.location.origin+"/pupa-pet/pet.html?id="+doc.id;
+
+document.getElementById("link").innerHTML=
+"Pet profile created!<br><br>"+link;
+
+});
+
+}
+
 </script>
 
 </body>
