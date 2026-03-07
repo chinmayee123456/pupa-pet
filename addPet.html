@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Pets</title>
+<link rel="stylesheet" href="style.css">
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+<script src="firebase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+<header>
+<h1>Add a Pet</h1>
+</header>
+
+<main>
+<form id="petForm">
+  <input type="text" id="petName" placeholder="Pet Name" required />
+  <input type="text" id="petType" placeholder="Pet Type" required />
+  <input type="file" id="petImage" accept="image/*" required />
+  <button type="button" id="addPetBtn">Add Pet</button>
+</form>
+
+<h2>Your QR Code</h2>
+<div id="userQrCode"></div>
+</main>
+
+<script>
+// Get userId from URL
+const params = new URLSearchParams(window.location.search);
+const userId = params.get("userId");
+
+// Generate user QR code linking to profile
+const profileUrl = `${window.location.origin}/profile.html?userId=${userId}`;
+new QRCode(document.getElementById("userQrCode"), {
+  text: profileUrl,
+  width: 200,
+  height: 200
+});
+
+// Add pet
+document.getElementById("addPetBtn").addEventListener("click", () => {
+  const name = document.getElementById("petName").value.trim();
+  const type = document.getElementById("petType").value.trim();
+  const imageFile = document.getElementById("petImage").files[0];
+
+  if (!name || !type || !imageFile) return alert("All fields required!");
+
+  const storageRef = storage.ref(`pets/${userId}_${Date.now()}_${imageFile.name}`);
+  storageRef.put(imageFile).then(snapshot => {
+    snapshot.ref.getDownloadURL().then(url => {
+      db.collection("pets").add({
+        userId,
+        name,
+        type,
+        imageUrl: url,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(() => {
+        alert("Pet added!");
+        document.getElementById("petForm").reset();
+      });
+    });
+  });
+});
+</script>
+</body>
+</html>
