@@ -1,5 +1,4 @@
 // firebase.js
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyAajQDEx-_EIWI0Ur1QiHWuc1v2Gq_qsRc",
   authDomain: "pupa-pet.firebaseapp.com",
@@ -9,7 +8,6 @@ const firebaseConfig = {
   appId: "1:782314476536:web:92f6d14f6c670f655abc0d"
 };
 
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
