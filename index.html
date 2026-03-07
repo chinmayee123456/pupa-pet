@@ -44,6 +44,11 @@ a{
 color:#4CAF50;
 text-decoration:none;
 }
+
+#msg{
+color:red;
+margin-top:10px;
+}
 </style>
 </head>
 
@@ -51,9 +56,9 @@ text-decoration:none;
 
 <div class="box">
 
-<h2>🐾 Register Your Account</h2>
+<h2>🐾 Register Account</h2>
 
-<input id="username" placeholder="Username">
+<input id="username" placeholder="Username or Email">
 <input id="password" type="password" placeholder="Password">
 
 <button onclick="register()">Register</button>
@@ -81,9 +86,8 @@ return;
 
 let users=JSON.parse(localStorage.getItem("users")) || [];
 
-// check if username already exists
 let exists = users.some(function(u){
-return u.username === user;
+return u.username===user;
 });
 
 if(exists){
@@ -91,11 +95,7 @@ document.getElementById("msg").innerText="User already exists. Please login.";
 return;
 }
 
-// add new user
-users.push({
-username:user,
-password:pass
-});
+users.push({username:user,password:pass});
 
 localStorage.setItem("users",JSON.stringify(users));
 
