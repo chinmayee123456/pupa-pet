@@ -17,12 +17,38 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
-/* minimal inline CSS to guarantee clickable button */
-body { font-family: 'Segoe UI', sans-serif; background:#f2f4f8; margin:0; padding:0; }
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background:#f2f4f8; margin:0; padding:0;
+}
 header { background:#4e8cff; color:white; padding:15px 0; text-align:center; }
-main { max-width:500px; margin:30px auto; padding:20px; background:white; border-radius:10px; display:flex; flex-direction:column; gap:10px; }
-input, button { width:100%; padding:12px; border-radius:6px; border:1px solid #ccc; box-sizing:border-box; }
-button { background:#4e8cff; color:white; cursor:pointer; position:relative; z-index:10; }
+main {
+  max-width:500px;
+  margin:30px auto;
+  padding:20px;
+  background:white;
+  border-radius:10px;
+}
+form {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+input, button {
+  width:100%;
+  padding:12px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  box-sizing:border-box;
+}
+button {
+  background:#4e8cff;
+  color:white;
+  border:none;
+  cursor:pointer;
+  position:relative;
+  z-index:10;
+}
 button:hover { background:#3467c1; }
 </style>
 </head>
@@ -32,10 +58,13 @@ button:hover { background:#3467c1; }
 </header>
 
 <main>
-  <input type="text" id="petName" placeholder="Pet Name" required>
-  <input type="text" id="petType" placeholder="Pet Type" required>
-  <input type="file" id="petImage" accept="image/*" required>
-  <button type="button" id="addPetBtn">Add Pet</button>
+  <form id="petForm">
+    <input type="text" id="petName" placeholder="Pet Name" required>
+    <input type="text" id="petType" placeholder="Pet Type" required>
+    <input type="file" id="petImage" accept="image/*" required>
+    <button type="submit" id="addPetBtn">Add Pet</button>
+  </form>
+
   <h2>Your QR Code</h2>
   <div id="userQrCode"></div>
 </main>
@@ -51,28 +80,41 @@ window.onload = () => {
     return;
   }
 
-  // QR code
+  // Show QR code
   new QRCode(document.getElementById("userQrCode"), {
     text:`${window.location.origin}/profile.html?userId=${userId}`,
     width:200,
     height:200
   });
 
-  const btn = document.getElementById("addPetBtn");
-  btn.addEventListener("click", ()=>{
+  const form = document.getElementById("petForm");
+  form.addEventListener("submit", (e)=>{
+    e.preventDefault(); // STOP form from reloading page
+
     const name = document.getElementById("petName").value.trim();
     const type = document.getElementById("petType").value.trim();
     const imageFile = document.getElementById("petImage").files[0];
     if(!name || !type || !imageFile) return alert("All fields required!");
 
     const storageRef = storage.ref(`pets/${userId}_${Date.now()}_${imageFile.name}`);
-    storageRef.put(imageFile).then(snap=>snap.ref.getDownloadURL()).then(url=>{
-      db.collection("pets").add({userId,name,type,imageUrl:url,createdAt:firebase.firestore.FieldValue.serverTimestamp()})
-      .then(()=>{ alert("Pet added!"); })
-      .catch(err=>alert(err.message));
-    }).catch(err=>alert(err.message));
+    storageRef.put(imageFile)
+      .then(snap=>snap.ref.getDownloadURL())
+      .then(url=>{
+        return db.collection("pets").add({
+          userId,
+          name,
+          type,
+          imageUrl:url,
+          createdAt:firebase.firestore.FieldValue.serverTimestamp()
+        });
+      })
+      .then(()=>{
+        alert("Pet added successfully!");
+        form.reset();
+      })
+      .catch(err=>alert("Error: "+err.message));
   });
-}
+};
 </script>
 </body>
 </html>
