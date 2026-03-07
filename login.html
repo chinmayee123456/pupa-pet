@@ -1,114 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pupa Pet - Login</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAajQDEx-_EIWI0Ur1QiHWuc1v2Gq_qsRc",
+      authDomain: "pupa-pet.firebaseapp.com",
+      projectId: "pupa-pet",
+      storageBucket: "pupa-pet.firebasestorage.app",
+      messagingSenderId: "782314476536",
+      appId: "1:782314476536:web:92f6d14f6c670f655abc0d"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
 
-<title>Pupa Pet Login</title>
-
-<style>
-
-body{
-font-family:Arial;
-background:#f2f4f8;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-}
-
-.box{
-background:white;
-padding:40px;
-border-radius:10px;
-box-shadow:0 5px 20px rgba(0,0,0,0.1);
-width:320px;
-text-align:center;
-}
-
-input{
-width:100%;
-padding:10px;
-margin:10px 0;
-border-radius:5px;
-border:1px solid #ccc;
-}
-
-button{
-width:100%;
-padding:10px;
-background:#2196F3;
-color:white;
-border:none;
-border-radius:5px;
-cursor:pointer;
-}
-
-button:hover{
-background:#1976D2;
-}
-
-a{
-text-decoration:none;
-color:#2196F3;
-}
-
-#msg{
-color:red;
-margin-top:10px;
-}
-
-</style>
-
+    function loginUser() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => alert('Login Successful!'))
+        .catch(err => alert(err.message));
+    }
+  </script>
 </head>
-
 <body>
+  <header>
+    <h1>Pupa Pet Login</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="login.html">Login</a>
+      <a href="pet.html">Pets</a>
+    </nav>
+  </header>
 
-<div class="box">
-
-<h2>🔑 Login</h2>
-
-<input id="username" placeholder="Username or Email">
-<input id="password" type="password" placeholder="Password">
-
-<button onclick="login()">Login</button>
-
-<p style="margin-top:15px;">
-New user?
-<a href="index.html">Register</a>
-</p>
-
-<p id="msg"></p>
-
-</div>
-
-<script>
-
-function login(){
-
-let user=document.getElementById("username").value.trim();
-let pass=document.getElementById("password").value.trim();
-
-let users = JSON.parse(localStorage.getItem("users")) || [];
-
-let found = users.some(function(u){
-return u.username === user && u.password === pass;
-});
-
-if(found){
-
-localStorage.setItem("loggedIn","true");
-
-window.location.href="pet.html";
-
-}
-else{
-
-document.getElementById("msg").innerText="Invalid username or password";
-
-}
-
-}
-
-</script>
-
+  <main>
+    <h2>Login</h2>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="loginUser()">Login</button>
+  </main>
 </body>
 </html>
