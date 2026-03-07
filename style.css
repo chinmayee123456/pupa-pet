@@ -1,61 +1,50 @@
+/* General styling */
 body {
-    font-family: 'Segoe UI', sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #f2f4f8;
-    color: #333;
+  font-family: 'Segoe UI', sans-serif;
+  background:#f2f4f8;
+  margin:0;
+  padding:0;
 }
 header {
-    background: #4e8cff;
-    color: white;
-    padding: 15px 0;
-    text-align: center;
+  background:#4e8cff;
+  color:white;
+  padding:15px 0;
+  text-align:center;
 }
 main {
-    max-width: 900px;
-    margin: 30px auto;
-    padding: 20px;
-    background: white;
-    border-radius: 10px;
+  max-width:500px;
+  margin:30px auto;
+  padding:20px;
+  background:white;
+  border-radius:10px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
 }
-#petForm {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+
+/* Form inputs and button */
+form input, form button {
+  width:100%;
+  padding:12px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  box-sizing:border-box;
 }
-input, button {
-    width: 100%;
-    padding: 12px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
+
+/* Add Pet button */
+#addPetBtn {
+  background:#4e8cff;
+  color:white;
+  border:none;
+  cursor:pointer;
+  position:relative; /* ensures clickable */
+  z-index:10;         /* ensures above inputs */
 }
-button {
-    background: #4e8cff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    position: relative;
-    z-index: 10;
-}
-button:hover { background: #3467c1; }
-.pet-card {
-    display: inline-block;
-    width: 220px;
-    margin: 10px;
-    padding: 10px;
-    background: #e0f0ff;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-}
-.pet-card img {
-    width: 100%;
-    border-radius: 10px;
-    height: 180px;
-    object-fit: cover;
-}
-@media screen and (max-width: 600px) {
-    .pet-card { width: 90%; }
-    input, button { width: 100%; }
+#addPetBtn:hover { background:#3467c1; }
+
+/* QR Code section */
+#userQrCode {
+  margin-top:20px;
+  display:flex;
+  justify-content:center;
 }
