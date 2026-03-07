@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Profile</title>
+<link rel="stylesheet" href="style.css">
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="firebase.js"></script>
+</head>
+<body>
+<header>
+<h1>User Profile</h1>
+</header>
+
+<main>
+<h2>Registered Pets</h2>
+<div id="petContainer" style="display:flex; flex-wrap:wrap;"></div>
+</main>
+
+<script>
+// Get userId from URL
+const params = new URLSearchParams(window.location.search);
+const userId = params.get("userId");
+
+function loadPets() {
+  const container = document.getElementById("petContainer");
+  container.innerHTML = "";
+
+  db.collection("pets").where("userId","==",userId).orderBy("createdAt","desc").get()
+    .then(snapshot => {
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const card = document.createElement("div");
+        card.className = "pet-card";
+        card.style.margin="10px";
+        card.style.padding="10px";
+        card.style.width="220px";
+        card.style.textAlign="center";
+        card.style.background="#e0f0ff";
+        card.style.borderRadius="10px";
+
+        card.innerHTML = `
+          <img src="${data.imageUrl}" alt="${data.name}" style="width:100%;border-radius:10px;">
+          <h3>${data.name}</h3>
+          <p>Type: ${data.type}</p>
+        `;
+        container.appendChild(card);
+      });
+    });
+}
+
+window.onload = loadPets;
+</script>
+</body>
+</html>
