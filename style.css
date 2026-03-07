@@ -1,4 +1,3 @@
-/* General */
 body {
     font-family: 'Segoe UI', sans-serif;
     margin: 0;
@@ -7,7 +6,6 @@ body {
     color: #333;
 }
 
-/* Header */
 header {
     background: #4e8cff;
     color: white;
@@ -15,7 +13,6 @@ header {
     text-align: center;
 }
 
-/* Main container */
 main {
     max-width: 900px;
     margin: 30px auto;
@@ -25,7 +22,6 @@ main {
     box-sizing: border-box;
 }
 
-/* Forms */
 input, button {
     width: 95%;
     padding: 12px;
@@ -35,7 +31,6 @@ input, button {
     box-sizing: border-box;
 }
 
-/* Buttons */
 button {
     background: #4e8cff;
     color: white;
@@ -44,11 +39,8 @@ button {
     font-weight: 600;
 }
 
-button:hover {
-    background: #3467c1;
-}
+button:hover { background: #3467c1; }
 
-/* Pet cards */
 .pet-card {
     display: inline-block;
     width: 220px;
@@ -67,25 +59,11 @@ button:hover {
     object-fit: cover;
 }
 
-/* Multi-step forms */
-.step {
-    display: none;
-    flex-direction: column;
-    gap: 10px;
-}
+.step { display: none; flex-direction: column; gap: 10px; }
+.step.active { display: flex; }
 
-.step.active {
-    display: flex;
-}
+#userQrCode { margin-top: 20px; display: flex; justify-content: center; }
 
-/* QR code container */
-#userQrCode {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-}
-
-/* Responsive */
 @media screen and (max-width: 600px) {
     .pet-card { width: 90%; }
     input, button { width: 100%; }
