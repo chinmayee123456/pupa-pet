@@ -11,13 +11,6 @@ header {
     padding: 15px 0;
     text-align: center;
 }
-nav a {
-    color: white;
-    margin: 0 15px;
-    text-decoration: none;
-    font-weight: 600;
-}
-nav a:hover { color: #ffd700; }
 main {
     max-width: 900px;
     margin: 30px auto;
@@ -25,18 +18,25 @@ main {
     background: white;
     border-radius: 10px;
 }
+#petForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 input, button {
-    width: 95%;
+    width: 100%;
     padding: 12px;
-    margin: 10px 0;
     border-radius: 6px;
     border: 1px solid #ccc;
+    box-sizing: border-box;
 }
 button {
     background: #4e8cff;
     color: white;
     border: none;
     cursor: pointer;
+    position: relative;
+    z-index: 10;
 }
 button:hover { background: #3467c1; }
 .pet-card {
