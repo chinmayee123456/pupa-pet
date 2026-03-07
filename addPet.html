@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Add Pets</title>
-
-<!-- CSS -->
 <link rel="stylesheet" href="style.css">
 
 <!-- Firebase -->
@@ -17,66 +15,94 @@
 
 <!-- QR code library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+body { font-family:'Segoe UI', sans-serif; background:#f2f4f8; margin:0; padding:0;}
+header { background:#4e8cff; color:white; padding:15px 0; text-align:center; }
+main { max-width:500px; margin:30px auto; padding:20px; background:white; border-radius:10px; }
+.step { display:none; flex-direction:column; gap:10px; }
+.step.active { display:flex; }
+input, button { width:100%; padding:12px; border-radius:6px; border:1px solid #ccc; box-sizing:border-box; }
+button { background:#4e8cff; color:white; cursor:pointer; position:relative; z-index:10; border:none;}
+button:hover { background:#3467c1; }
+#userQrCode { margin-top:20px; display:flex; justify-content:center; }
+</style>
 </head>
 <body>
 <header>
-  <h1>Add a Pet</h1>
+<h1>Add a Pet</h1>
 </header>
 
 <main>
-  <form id="petForm">
+  <!-- Step 1: Pet Info -->
+  <div class="step active" id="step1">
     <input type="text" id="petName" placeholder="Pet Name" required>
     <input type="text" id="petType" placeholder="Pet Type" required>
-    <input type="file" id="petImage" accept="image/*" required>
-    <button type="submit" id="addPetBtn">Add Pet</button>
-  </form>
+    <button id="nextBtn">Next</button>
+  </div>
 
-  <h2>Your QR Code</h2>
-  <div id="userQrCode"></div>
+  <!-- Step 2: Upload Image -->
+  <div class="step" id="step2">
+    <input type="file" id="petImage" accept="image/*" required>
+    <button id="addPetBtn">Add Pet</button>
+  </div>
+
+  <!-- Step 3: QR Code -->
+  <div class="step" id="step3">
+    <h2>Your QR Code</h2>
+    <div id="userQrCode"></div>
+  </div>
 </main>
 
 <script>
 window.onload = () => {
   const params = new URLSearchParams(window.location.search);
   const userId = params.get("userId");
-
   if(!userId){
     alert("Login first");
-    window.location.href = "login.html";
+    window.location.href="login.html";
     return;
   }
 
-  // Generate QR code
-  new QRCode(document.getElementById("userQrCode"), {
-    text:`${window.location.origin}/profile.html?userId=${userId}`,
-    width:200,
-    height:200
-  });
+  const step1 = document.getElementById("step1");
+  const step2 = document.getElementById("step2");
+  const step3 = document.getElementById("step3");
 
-  const form = document.getElementById("petForm");
-  form.addEventListener("submit", (e)=>{
-    e.preventDefault(); // STOP page reload
-
+  // Step 1 → Step 2
+  document.getElementById("nextBtn").addEventListener("click", ()=>{
     const name = document.getElementById("petName").value.trim();
     const type = document.getElementById("petType").value.trim();
+    if(!name || !type) return alert("Enter name and type!");
+    step1.classList.remove("active");
+    step2.classList.add("active");
+  });
+
+  // Step 2 → Upload and Step 3
+  document.getElementById("addPetBtn").addEventListener("click", ()=>{
     const imageFile = document.getElementById("petImage").files[0];
-    if(!name || !type || !imageFile) return alert("All fields required!");
+    const name = document.getElementById("petName").value.trim();
+    const type = document.getElementById("petType").value.trim();
+    if(!imageFile) return alert("Select an image!");
 
     const storageRef = storage.ref(`pets/${userId}_${Date.now()}_${imageFile.name}`);
     storageRef.put(imageFile)
       .then(snap=>snap.ref.getDownloadURL())
       .then(url=>{
         return db.collection("pets").add({
-          userId,
-          name,
-          type,
-          imageUrl:url,
+          userId, name, type, imageUrl:url,
           createdAt:firebase.firestore.FieldValue.serverTimestamp()
         });
       })
       .then(()=>{
         alert("Pet added successfully!");
-        form.reset();
+        step2.classList.remove("active");
+        step3.classList.add("active");
+
+        new QRCode(document.getElementById("userQrCode"), {
+          text:`${window.location.origin}/profile.html?userId=${userId}`,
+          width:200,
+          height:200
+        });
       })
       .catch(err=>alert(err.message));
   });
