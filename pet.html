@@ -1,56 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pupa Pet - Pets</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyAajQDEx-_EIWI0Ur1QiHWuc1v2Gq_qsRc",
-      authDomain: "pupa-pet.firebaseapp.com",
-      projectId: "pupa-pet",
-      storageBucket: "pupa-pet.firebasestorage.app",
-      messagingSenderId: "782314476536",
-      appId: "1:782314476536:web:92f6d14f6c670f655abc0d"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const storage = firebase.storage();
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pupa Pet - Pets</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+<script src="firebase.js"></script>
+<script>
+function addPet() {
+  const name = document.getElementById('petName').value;
+  const type = document.getElementById('petType').value;
+  const imageFile = document.getElementById('petImage').files[0];
 
-    function addPet() {
-      const name = document.getElementById('petName').value;
-      const type = document.getElementById('petType').value;
+  if(!name || !type || !imageFile) return alert("All fields required!");
 
+  const storageRef = storage.ref('pets/' + imageFile.name);
+  storageRef.put(imageFile).then(snapshot => {
+    snapshot.ref.getDownloadURL().then(url => {
       db.collection("pets").add({
         name: name,
         type: type,
+        imageUrl: url,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .then(() => alert("Pet added!"))
-      .catch(err => console.error(err));
-    }
-  </script>
+      }).then(() => {
+        alert("Pet added!");
+        document.getElementById('petForm').reset();
+        loadPets();
+      });
+    });
+  });
+}
+
+function loadPets() {
+  const container = document.getElementById('petContainer');
+  container.innerHTML = "";
+  db.collection("pets").orderBy("createdAt","desc").get().then(snapshot => {
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      container.innerHTML += `
+        <div class="pet-card">
+          <img src="${data.imageUrl}" alt="${data.name}">
+          <h3>${data.name}</h3>
+          <p>${data.type}</p>
+        </div>`;
+    });
+  });
+}
+
+window.onload = loadPets;
+</script>
 </head>
 <body>
-  <header>
-    <h1>Pupa Pet Management</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="login.html">Login</a>
-      <a href="pet.html">Pets</a>
-    </nav>
-  </header>
+<header>
+  <h1>Pupa Pet Management</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="login.html">Login</a>
+    <a href="pet.html">Pets</a>
+  </nav>
+</header>
 
-  <main>
-    <h2>Add a Pet</h2>
+<main>
+  <h2>Add a Pet</h2>
+  <form id="petForm" onsubmit="event.preventDefault(); addPet();">
     <input type="text" id="petName" placeholder="Pet Name" />
     <input type="text" id="petType" placeholder="Pet Type" />
-    <button onclick="addPet()">Add Pet</button>
-  </main>
+    <input type="file" id="petImage" accept="image/*" />
+    <button type="submit">Add Pet</button>
+  </form>
+
+  <h2>All Pets</h2>
+  <div id="petContainer"></div>
+</main>
 </body>
 </html>
